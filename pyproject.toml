@@ -1,0 +1,66 @@
+[project]
+name = "violin"
+version = "0.1.0"
+description = "Open-source video dubbing — translate any video into 33 languages with native-sounding voice-over and synced subtitles."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Shang Zhu" },
+    { name = "Qinghong Lin" },
+]
+keywords = ["video", "translation", "dubbing", "tts", "whisper", "subtitles", "together-ai", "elevenlabs"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "aiofiles>=25.1.0",
+    "elevenlabs>=1.0.0",
+    "fastapi>=0.135.2",
+    "ffmpeg-python>=0.2.0",
+    "httpx>=0.28.1",
+    "imageio-ffmpeg>=0.6.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.22",
+    "pyyaml>=6.0.3",
+    "soundfile>=0.13.1",
+    "together>=2.5.0",
+    "uvicorn>=0.42.0",
+    "yt-dlp>=2025.1.0",
+]
+
+[project.scripts]
+violin = "main:main"
+violin-api = "run_api:main"
+
+[project.urls]
+Repository = "https://github.com/shang-zhu/Violin"
+Issues = "https://github.com/shang-zhu/Violin/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipeline", "api", "prompts"]
+# Exclude demo gallery clips from the wheel — they're for the public
+# violin-ai.com demo only, not needed for pip-installed users (saves ~27 MB).
+exclude = ["api/static/demo"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"main.py" = "main.py"
+"run_api.py" = "run_api.py"
+"config" = "config"
+".claude" = ".claude"     # Claude Code skill files — copied to ~/.claude/skills/ by `violin --install-skill`
